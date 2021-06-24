@@ -61,3 +61,9 @@ Active
 
 - 로드된 프리팹은 SelectionGrid를 사용했기 때문에 기능이 제한적입니다. 필요 시 커스터마이징하세요.
 - The loaded prefab has limited functionality because it uses a SelectionGrid. Customize as needed.
+
+
+     <br/>
+
+- 만약 작동하지 않는다면 TimeMapWinsow에 상태를 확인해 주세요.
+- If it doesn't work, check the status in TimeMapWinsow.
