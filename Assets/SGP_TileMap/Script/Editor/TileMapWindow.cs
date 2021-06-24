@@ -48,7 +48,7 @@ namespace SGP_Util
                 var tilemap = GameObject.Find(basename) as GameObject;
                 if (tilemap == null)
                 {
-                    tilemap = Instantiate(EditorResources.Load<GameObject>(path + basepath)) as GameObject;
+                    tilemap =  PrefabUtility.InstantiatePrefab(EditorResources.Load<GameObject>(path + basepath)) as GameObject;
                     Undo.IncrementCurrentGroup();
                     Undo.RegisterCreatedObjectUndo(tilemap, basename);
                     tilemap.name = basename;
@@ -91,7 +91,7 @@ namespace SGP_Util
                     if (i == 0)
                     {
                         selectindex = i;
-                        SetSelectObject(Instantiate(prefabs[i]));
+                        SetSelectObject( PrefabUtility.InstantiatePrefab(prefabs[i]) as GameObject);
                         selectObject.SetActive(false);
                     }
                 }
@@ -195,7 +195,7 @@ namespace SGP_Util
                                         DestroyImmediate(selectObject);
                                     }
 
-                                    var newobject = Instantiate(prefabs[selectindex]);
+                                    var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
                                     SetSelectObject(newobject);
                                     Undo.RegisterCreatedObjectUndo(newobject, "newobject1");
                                 }
@@ -212,7 +212,7 @@ namespace SGP_Util
                                         DestroyImmediate(selectObject);
                                     }
 
-                                    var newobject = Instantiate(prefabs[selectindex]);
+                                    var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
                                     Undo.RegisterCreatedObjectUndo(newobject, "newobject2");
                                     SetSelectObject(newobject);
                                 }
@@ -221,7 +221,7 @@ namespace SGP_Util
                                     if (selectObject != null)
                                     {
                                         Undo.IncrementCurrentGroup();
-                                        var newobject = Instantiate(selectObject);
+                                        var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
                                         Undo.RegisterCreatedObjectUndo(newobject, "newobject3");
                                         newobject.transform.position = selectObjectPosition;
                                         newobject.SetActive(true);
