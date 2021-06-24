@@ -1,5 +1,5 @@
 # SGP_TileMap
-Unity3D / 3DTileMapSystem / 2020.3.1f1
+Unity3D / 3DTileMapSystem / 2021.1.11f1 / Windows10
 
 - SceneView에서 작업가능한 타일 맵 생성 툴 입니다.
 - A tile map creation tool that works in SceneView.
