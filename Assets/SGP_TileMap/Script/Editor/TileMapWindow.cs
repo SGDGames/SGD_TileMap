@@ -277,6 +277,8 @@ namespace SGP_Util
          private int rotationindex = 0;
         private void SetSelectObject(GameObject selectObject)
         {
+            if(this.selectObject!=null)
+                DestroyImmediate(this.selectObject);
             SetLayer(selectObject, selectObjectLayer);
             this.selectObject = selectObject;
 
