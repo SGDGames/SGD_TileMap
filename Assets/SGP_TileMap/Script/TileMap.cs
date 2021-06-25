@@ -36,7 +36,7 @@ namespace SGP_Util
         {
             var material = GetComponent<MeshRenderer>().sharedMaterial;
             transform.localScale = new Vector3(cellSize * sizeX * 0.1f, 1, cellSize * sizeY * 0.1f);
-            material.SetTextureScale("_MainTex", new Vector2(transform.localScale.x, transform.localScale.y));
+            material.SetTextureScale("_BaseMap", new Vector2(sizeX, sizeY));
 #if UNITY_EDITOR
             EditorUtility.SetDirty(this);
             EditorUtility.SetDirty(transform);
