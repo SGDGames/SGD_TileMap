@@ -121,8 +121,8 @@ namespace SGP_Util
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(t);
-                Undo.IncrementCurrentGroup();
-                Undo.RecordObject(t, "t");
+            //    Undo.IncrementCurrentGroup();
+            //    Undo.RecordObject(t, "t");
             }
         }
         private Vector2 scrollpos;
@@ -142,7 +142,13 @@ namespace SGP_Util
                 if (xCount > prefabs.Length)
                     xCount = prefabs.Length;
                 else if (xCount == 0) xCount = 1;
+                var originselectindex = selectindex;
                 selectindex = GUILayout.SelectionGrid(selectindex, paletteIcons.ToArray(), xCount);
+                if (originselectindex != selectindex)
+                {
+                    ChangeSelectIndex("newobject0");
+                }
+
                 EditorGUILayout.EndScrollView();
             }
         }
@@ -176,7 +182,7 @@ namespace SGP_Util
                         pointx += t.cellSize * 0.5f;
                         pointz += t.cellSize * 0.5f;
 
-                        var newpoint = new Vector3(pointx, hit.point.y, pointz);
+                        var newpoint = new Vector3(pointx, 0, pointz);
                         Handles.DrawWireCube(newpoint, new Vector3(t.cellSize, 0, t.cellSize));
                         selectObjectView = true;
                         selectObjectPosition = newpoint;
@@ -192,33 +198,15 @@ namespace SGP_Util
                                     if (selectindex < 0) selectindex = prefabs.Length - 1;
 
                                     Repaint();
-                                    if (selectObject != null)
-                                    {
-                                        Undo.IncrementCurrentGroup();
-                                        Undo.DestroyObjectImmediate(selectObject);
-                                        DestroyImmediate(selectObject);
-                                    }
-
-                                    var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
-                                    SetSelectObject(newobject);
-                                    Undo.RegisterCreatedObjectUndo(newobject, "newobject1");
+                                    ChangeSelectIndex("newobject1");
                                 }
                                 else if (Event.current.keyCode == t.rightMove)
                                 {
                                     selectindex++;
                                     if (selectindex >= prefabs.Length) selectindex = 0;
                                     Repaint();
-
-                                    if (selectObject != null)
-                                    {
-                                        Undo.IncrementCurrentGroup();
-                                        Undo.DestroyObjectImmediate(selectObject);
-                                        DestroyImmediate(selectObject);
-                                    }
-
-                                    var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
-                                    Undo.RegisterCreatedObjectUndo(newobject, "newobject2");
-                                    SetSelectObject(newobject);
+                                    ChangeSelectIndex("newobject2");
+                                 
                                 }
                                 else if (Event.current.keyCode == t.active)
                                 {
@@ -252,7 +240,9 @@ namespace SGP_Util
                     }
                     else
                     {
+                    
                         Selection.activeObject = hit.transform.root.gameObject;
+                    
                         switch (Event.current.type)
                         {
                             case EventType.KeyDown:
@@ -273,6 +263,20 @@ namespace SGP_Util
 
             sv.Repaint();
         }
+
+         void ChangeSelectIndex(string undokey)
+         {
+             if (selectObject != null)
+             {
+                 Undo.IncrementCurrentGroup();
+                 Undo.DestroyObjectImmediate(selectObject);
+                 DestroyImmediate(selectObject);
+             }
+
+             var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
+             SetSelectObject(newobject);
+             Undo.RegisterCreatedObjectUndo(newobject, undokey);
+         }
 
          private int rotationindex = 0;
         private void SetSelectObject(GameObject selectObject)
