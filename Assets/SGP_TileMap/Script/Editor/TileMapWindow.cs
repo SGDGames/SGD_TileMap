@@ -24,10 +24,11 @@ namespace SGP_Util
 
         private void LoadSaveData()
         {
-            if (EditorPrefs.HasKey("LeftMove")) t.leftMove = (KeyCode) EditorPrefs.GetInt("LeftMove");
-            if (EditorPrefs.HasKey("RightMove")) t.rightMove = (KeyCode) EditorPrefs.GetInt("RightMove");
-            if (EditorPrefs.HasKey("Active")) t.active = (KeyCode) EditorPrefs.GetInt("Active");
-            if (EditorPrefs.HasKey("Delete")) t.delete = (KeyCode) EditorPrefs.GetInt("Delete");
+            if (EditorPrefs.HasKey("SGP_TimeMap_LeftMove")) t.leftMove = (KeyCode) EditorPrefs.GetInt("SGP_TimeMap_LeftMove");
+            if (EditorPrefs.HasKey("SGP_TimeMap_RightMove")) t.rightMove = (KeyCode) EditorPrefs.GetInt("SGP_TimeMap_RightMove");
+            if (EditorPrefs.HasKey("SGP_TimeMap_Rotation")) t.rightMove = (KeyCode) EditorPrefs.GetInt("SGP_TimeMap_Rotation");
+            if (EditorPrefs.HasKey("SGP_TimeMap_Active")) t.active = (KeyCode) EditorPrefs.GetInt("SGP_TimeMap_Active");
+            if (EditorPrefs.HasKey("SGP_TimeMap_Delete")) t.delete = (KeyCode) EditorPrefs.GetInt("SGP_TimeMap_Delete");
         }
 
         private string lastLoadFolderName;
@@ -102,16 +103,19 @@ namespace SGP_Util
 
             var originleftmoave = t.leftMove;
             t.leftMove = (KeyCode) EditorGUILayout.EnumPopup("LeftMove", t.leftMove);
-            if (t.leftMove != originleftmoave) EditorPrefs.SetInt("LeftMove", (int) t.leftMove);
+            if (t.leftMove != originleftmoave) EditorPrefs.SetInt("SGP_TimeMap_LeftMove", (int) t.leftMove);
             var originrightmoave = t.rightMove;
             t.rightMove = (KeyCode) EditorGUILayout.EnumPopup("RightMove", t.rightMove);
-            if (t.rightMove != originrightmoave) EditorPrefs.SetInt("RightMove", (int) t.rightMove);
+            if (t.rightMove != originrightmoave) EditorPrefs.SetInt("SGP_TimeMap_RightMove", (int) t.rightMove);
+            var originrotation = t.rotation;
+            t.rotation = (KeyCode) EditorGUILayout.EnumPopup("Rotation", t.rotation);
+            if (t.rotation != originrotation) EditorPrefs.SetInt("SGP_TimeMap_Active", (int) t.rotation);
             var originactive = t.active;
             t.active = (KeyCode) EditorGUILayout.EnumPopup("Active", t.active);
-            if (t.active != originactive) EditorPrefs.SetInt("Active", (int) t.active);
+            if (t.active != originactive) EditorPrefs.SetInt("SGP_TimeMap_Active", (int) t.active);
             var origindelete = t.delete;
             t.delete = (KeyCode) EditorGUILayout.EnumPopup("Delete", t.delete);
-            if (t.delete != origindelete) EditorPrefs.SetInt("Delete", (int) t.delete);
+            if (t.delete != origindelete) EditorPrefs.SetInt("SGP_TimeMap_Delete", (int) t.delete);
             PreViewArea();
 
             if (EditorGUI.EndChangeCheck())
@@ -224,8 +228,22 @@ namespace SGP_Util
                                         var newobject =  PrefabUtility.InstantiatePrefab(prefabs[selectindex]) as GameObject;
                                         Undo.RegisterCreatedObjectUndo(newobject, "newobject3");
                                         newobject.transform.position = selectObjectPosition;
+                                        var rot = newobject.transform.eulerAngles;
+                                        rot.y += rotationindex * 90f;
+                                        newobject.transform.eulerAngles = rot;
                                         newobject.SetActive(true);
                                         SetLayer(newobject, 0);
+                                    }
+                                }else if (Event.current.keyCode == t.rotation)
+                                {
+                                    if (selectObject != null)
+                                    {
+                                        rotationindex++;
+                                        if (rotationindex > 3)
+                                            rotationindex = 0;
+                                        var rot = selectObject.transform.eulerAngles;
+                                        rot.y += 90f;
+                                        selectObject.transform.eulerAngles = rot;
                                     }
                                 }
 
@@ -256,12 +274,14 @@ namespace SGP_Util
             sv.Repaint();
         }
 
+         private int rotationindex = 0;
         private void SetSelectObject(GameObject selectObject)
         {
             SetLayer(selectObject, selectObjectLayer);
             this.selectObject = selectObject;
 
             selectObjectLayerMask = ~(1 << selectObjectLayer);
+            rotationindex = 0;
         }
 
         private LayerMask selectObjectLayerMask;

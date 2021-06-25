@@ -28,6 +28,7 @@ namespace SGP_Util
 
         [HideInInspector] public KeyCode leftMove = KeyCode.A;
         [HideInInspector] public KeyCode rightMove = KeyCode.S;
+        [HideInInspector] public KeyCode rotation = KeyCode.R;
         [HideInInspector] public KeyCode active = KeyCode.LeftShift;
         [HideInInspector] public KeyCode delete = KeyCode.D;
 
